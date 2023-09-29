@@ -8,7 +8,6 @@ import pandas as pd
 
 keyword = "테슬라"
 
-blogs = []
 Blog = []
 
 page = 1
@@ -34,14 +33,14 @@ while True:
     except:
         for data in re.finditer("\{.*\}", res.text):        
             total_page = int(data.group().split(",")[0].split(":")[1].replace('"', "")) // 30 
-            print(total_page)
             for data in re.finditer("\<[^\>]*\>.*", data.group()):
                 soup = BeautifulSoup(data.group().replace("}", ""), "html.parser")
     
+    blogs = []
     for a in soup.select(".total_area a"):
         if a["class"] == ['api_txt_lines', 'total_tit']:
             blogs.append(a["href"])
-    
+
     for blog in blogs:
         # yes24 블로그
         if ("yes24" in blog):
@@ -56,7 +55,7 @@ while True:
                 date = soup.select_one("#cphMain_dlArtList_lbWriteDate_0").text
                 content = soup.select_one("#cphMain_dlArtList_lbArtCont_0").text.replace("\n", "").strip()
             else:
-                print("다른 타입의 yes24 블로그")
+                print("다른 타입의 yes24 블로그: ", blog_url)
             
         # 티스토리 블로그
         elif ("tistory" in blog):
@@ -135,7 +134,7 @@ while True:
                 content = soup.select_one(".tt_article_useless_p_margin.contents_style").text.replace("\n", "").strip()
 
             else:
-                print("다른 타입의 티스토리 블로그")
+                print("다른 타입의 티스토리 블로그: ", blog_url)
         
         # 알라딘 블로그
         elif ("aladin" in blog):
@@ -151,8 +150,7 @@ while True:
                 content = soup.select_one(".article p").text.replace("\n", "").strip()
 
             else:
-                print("다른 타입의 알라딘 블로그")
-                print(blog_url)
+                print("다른 타입의 알라딘 블로그: ", blog_url)
 
         # 기타 블로그
         elif not("naver" in blog):
@@ -188,9 +186,15 @@ while True:
                 date = soup.select_one(".date").text.replace("\n", "").strip()
                 content = soup.select_one(".tt_article_useless_p_margin.contents_style").text.replace("\n", "").strip()
 
+            elif soup.select_one("h1.entry-title") != None:
+                category = "카테고리 없음"
+                title = soup.select_one("h1.entry-title").text
+                writer = soup.select_one("span.author-name").text
+                date = soup.select_one("time.entry-date.published").text
+                content = soup.select_one("div.entry-content").text.replace("\n", "").strip()
+
             else:
-                print("다른 타입의 기타 블로그")
-                print(blog_url)
+                print("다른 타입의 기타 블로그: ", blog_url)
 
         # 네이버 블로그
         else:
@@ -223,19 +227,21 @@ while True:
                 content = soup.select_one(".se_textarea").text.replace("\n", "").strip()
 
             else:
-                print("다른 타입의 네이버 블로그")
-                print(blog_url)
+                print("다른 타입의 네이버 블로그: ", blog_url)
+
+        blog = (category, title, writer, date, content, blog_url)
+        Blog.append(blog)
 
     if page == total_page:
         break
 
     page += 1
 
-    blog = (category, title, writer, date, content, blog_url)
-    Blog.append(blog)
-    print(Blog)
+print(pd.DataFrame(Blog, columns = ["카테고리", "제목", "작성자", "작성일시", "원문", "URL"]))
 
-# print(pd.DataFrame(Blog, columns = ["카테고리", "제목", "작성자", "작성일시", "원문", "URL"]))
+    
+    
+    
         
     
 
