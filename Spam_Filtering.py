@@ -22,6 +22,7 @@ print("normal_frequncy: ", normal_frequncy)
 print("spam_frequncy: ", spam_frequncy)    
 
 # 스팸/정상일 경우 조건부 확률 계산: 각 단어빈도를 활용하여 스팸/정상일 경우 조건부 확률 계산(라플라스 스무딩 적용)
+print()
 print("step2: 스팸/정상일 경우 조건부 확률 계산: 각 단어빈도를 활용하여 스팸/정상일 경우 조건부 확률 계산(라플라스 스무딩 적용))")
 print()
 normal_probability = {"award":0, "contact":0, "free":0, "get":0, "lottery":0, "me":0, "scholarship":0, "ticket":0, "to":0, "won":0, "you":0}
@@ -49,3 +50,20 @@ for key, cnt_spam in spam_frequncy.items():
     spam_probability[key] = (k + cnt_spam) / (2*k + total_spam)
 
     print(key, spam_probability[key])
+
+# 조건부 확률에 로그 적용
+print()
+print("step3: 조건부 확률에 로그 적용")
+print()
+
+import math
+
+print("< log_normal_conditional_probability >")
+for key, normal_conditional_probability in normal_probability.items():
+    print(key, math.log(normal_conditional_probability))
+
+print()
+print("< log_spam_conditional_probability >")
+for key, spam_conditional_probability in spam_probability.items():
+    print(key, math.log(spam_conditional_probability))
+
