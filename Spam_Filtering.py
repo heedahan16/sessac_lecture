@@ -90,3 +90,34 @@ print()
 print("< log_spam_prior_probability >")
 log_spam_prior_probability = math.log(total_spam / (total_normal + total_spam))
 print(log_spam_prior_probability)
+
+
+#  베이즈 정리를 적용하여 "Free Lottery" 단어 등장 시 스팸일 확률과 정상일 확률 계산을 함수로 구현
+print()
+print("step5: 베이즈 정리를 적용하여 'free lottery' 단어 등장 시 스팸일 확률과 정상일 확률 계산을 함수로 구현")
+print()
+
+test = "free lottery"
+
+def bayes_rule(test):
+    log_test_normal_probability = 0
+    for key, normal_conditional_probability in normal_probability.items():
+        if key in test.split(" "):
+            log_test_normal_probability += math.log(normal_conditional_probability)
+    log_test_normal_probability += log_normal_prior_probability
+    exp_test_normal_probability = math.exp(log_test_normal_probability)
+
+    log_test_spam_probability = 0
+    for key, spam_conditional_probability in spam_probability.items():
+        if key in test.split(" "):
+            log_test_spam_probability += math.log(spam_conditional_probability)
+    log_test_spam_probability += log_spam_prior_probability
+    exp_test_spam_probability = math.exp(log_test_spam_probability)
+
+
+    test_normal_probability = (exp_test_normal_probability / (exp_test_normal_probability + exp_test_spam_probability))
+    test_spam_probability = (exp_test_spam_probability / (exp_test_normal_probability + exp_test_spam_probability))
+
+    return f"'{test}' 단어 등장 시 정상 확률: {round(test_normal_probability, 3) * 100}%, " f"스팸 확률: {round(test_spam_probability, 3) * 100}%"
+
+print(bayes_rule("free lottery"))
