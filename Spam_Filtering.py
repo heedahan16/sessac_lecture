@@ -67,3 +67,26 @@ print("< log_spam_conditional_probability >")
 for key, spam_conditional_probability in spam_probability.items():
     print(key, math.log(spam_conditional_probability))
 
+
+#  스팸/정상에 대한 사전 확률 계산 및 로그 적용
+print()
+print("step4: 스팸/정상에 대한 사전 확률 계산 및 로그 적용")
+print()
+
+print("< normal_prior_probability >")
+normal_prior_probability = total_normal / (total_normal + total_spam)
+print(normal_prior_probability)
+print()
+print("< spam_prior_probability >")
+spam_prior_probability = total_spam / (total_normal + total_spam)
+print(spam_prior_probability)
+
+print()
+print("< log_normal_prior_probability >")
+log_normal_prior_probability = math.log(total_normal / (total_normal + total_spam))
+print(log_normal_prior_probability)
+
+print()
+print("< log_spam_prior_probability >")
+log_spam_prior_probability = math.log(total_spam / (total_normal + total_spam))
+print(log_spam_prior_probability)
